@@ -6,6 +6,8 @@
 package miniblog
 
 import (
+	"cn.xdmnb/study/miniblog/internal/pkg/core"
+	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
 	"cn.xdmnb/study/miniblog/internal/pkg/middleware"
 	"cn.xdmnb/study/miniblog/pkg/version/verflag"
@@ -74,14 +76,14 @@ func run() error {
 
 	// 注册 404 Handler.
 	g.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"code": 10003, "message": "Page not found."})
+		core.WriteResponse(c, errno.ErrPageNotFound, nil)
 	})
 
 	// 注册 /healthz handler.
 	g.GET("/healthz", func(c *gin.Context) {
 		log.C(c).Infow("Healthz function called")
 
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+		core.WriteResponse(c, nil, gin.H{"status": "ok"})
 	})
 
 	// 创建 HTTP Server 实例
