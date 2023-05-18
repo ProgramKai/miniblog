@@ -7,9 +7,9 @@ package biz
 
 import (
 	"cn.xdmnb/study/miniblog/internal/app/miniblog/store"
+	v1 "cn.xdmnb/study/miniblog/internal/pkg/domain/v1"
 	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/model"
-	v1 "cn.xdmnb/study/miniblog/internal/pkg/request_body/v1"
 	"cn.xdmnb/study/miniblog/internal/pkg/token"
 	"cn.xdmnb/study/miniblog/pkg/auth"
 	"context"
@@ -26,6 +26,7 @@ type IUserBiz interface {
 	Login(ctx context.Context, r *v1.LoginRequest) (*v1.LoginResponse, error)
 	Create(ctx context.Context, createUserReq *v1.CreateUserReq) error
 	ChangePassword(ctx context.Context, username string, changePasswordReq *v1.ChangePasswordReq) error
+	QueryByUsername(ctx context.Context, username string) (*v1.UserInfoRes, error)
 }
 
 type UserBizImpl struct {
@@ -87,6 +88,23 @@ func (u *UserBizImpl) Login(ctx context.Context, r *v1.LoginRequest) (*v1.LoginR
 	}
 
 	return &v1.LoginResponse{Token: t}, nil
+}
+
+// QueryByUsername 根据用户名查询用户信息
+func (u *UserBizImpl) QueryByUsername(ctx context.Context, username string) (*v1.UserInfoRes, error) {
+	user, err := u.ds.Users().Get(ctx, username)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.UserInfoRes{
+		ID:        user.ID,
+		Username:  user.Username,
+		Nickname:  user.Nickname,
+		Email:     user.Email,
+		Phone:     user.Phone,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+	}, nil
 }
 
 // createUserReqToUserM 将 CreateUserReq 转换为 UserM

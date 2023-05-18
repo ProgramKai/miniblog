@@ -8,12 +8,14 @@ package user
 import (
 	"cn.xdmnb/study/miniblog/internal/app/miniblog/biz"
 	"cn.xdmnb/study/miniblog/internal/app/miniblog/store"
+	"cn.xdmnb/study/miniblog/internal/pkg/authz"
 )
 
 type UserController struct {
-	b biz.IBiz
+	b     biz.IBiz
+	authz *authz.Authz
 }
 
-func NewUserController(ds store.IStore) *UserController {
-	return &UserController{b: biz.NewBiz(ds)}
+func NewUserController(ds store.IStore, authz *authz.Authz) *UserController {
+	return &UserController{b: biz.NewBiz(ds), authz: authz}
 }

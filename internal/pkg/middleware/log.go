@@ -44,6 +44,6 @@ func RequestLog() gin.HandlerFunc {
 		c.Request.Body = io.NopCloser(bytes.NewBuffer(b))
 		//响应体 body
 		responseBody := writer.b.String()
-		log.C(c).Infow(reqUri, "latency_time", latencyTime, "client_ip", clientIP, "req_method", reqMethod, "request_body", requestBody, "response_body", responseBody)
+		log.C(c).Infow(reqUri, "latency_time", latencyTime, "client_ip", clientIP, "req_method", reqMethod, "domain", requestBody, "response_body", responseBody)
 	}
 }

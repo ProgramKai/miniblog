@@ -21,18 +21,18 @@ type IStore interface {
 }
 
 type datasource struct {
-	db *gorm.DB
+	DB *gorm.DB
 }
 
 var _ IStore = (*datasource)(nil)
 
 func NewStore(db *gorm.DB) *datasource {
 	once.Do(func() {
-		S = &datasource{db: db}
+		S = &datasource{DB: db}
 	})
 	return S
 }
 
 func (d *datasource) Users() IUserStore {
-	return newUserStore(d.db)
+	return newUserStore(d.DB)
 }

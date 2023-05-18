@@ -6,9 +6,9 @@
 package user
 
 import (
+	v1 "cn.xdmnb/study/miniblog/internal/pkg/domain/v1"
 	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
-	v1 "cn.xdmnb/study/miniblog/internal/pkg/request_body/v1"
 	"cn.xdmnb/study/miniblog/internal/pkg/response"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
