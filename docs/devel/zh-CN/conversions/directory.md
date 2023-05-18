@@ -68,6 +68,7 @@
 │   │   ├── router.go # Gin 路由加载代码
 │   │   └── store # store 层代码
 │   └── pkg # 内部包保存目录
+│       ├── response # response 包，用来保存一些与response相关的函数
 │       ├── core # core 包，用来保存一些核心的函数
 │       ├── errno # errno 包，实现了 miniblog 的错误码功能
 │       │   ├── code.go # 错误码定义文件

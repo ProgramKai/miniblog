@@ -6,10 +6,10 @@
 package user
 
 import (
-	"cn.xdmnb/study/miniblog/internal/pkg/core"
 	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
 	v1 "cn.xdmnb/study/miniblog/internal/pkg/request_body/v1"
+	"cn.xdmnb/study/miniblog/internal/pkg/response"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 )
@@ -19,21 +19,21 @@ func (ctrl *UserController) ChangePassword(c *gin.Context) {
 
 	var r v1.ChangePasswordReq
 	if err := c.ShouldBindJSON(&r); err != nil {
-		core.WriteResponse(c, errno.ErrBind, nil)
+		response.WriteResponse(c, errno.ErrBind, nil)
 
 		return
 	}
 
 	if _, err := govalidator.ValidateStruct(r); err != nil {
-		core.WriteResponse(c, errno.ErrInvalidParameter.SetMessage(err.Error()), nil)
+		response.WriteResponse(c, errno.ErrInvalidParameter.SetMessage(err.Error()), nil)
 		return
 	}
 
 	if err := ctrl.b.UserBiz().ChangePassword(c, c.Param("name"), &r); err != nil {
-		core.WriteResponse(c, err, nil)
+		response.WriteResponse(c, err, nil)
 
 		return
 	}
 
-	core.WriteResponse(c, nil, nil)
+	response.WriteResponse(c, nil, nil)
 }

@@ -6,9 +6,9 @@
 package middleware
 
 import (
-	"cn.xdmnb/study/miniblog/internal/pkg/core"
 	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/known"
+	"cn.xdmnb/study/miniblog/internal/pkg/response"
 	"cn.xdmnb/study/miniblog/internal/pkg/token"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -24,7 +24,7 @@ func Authn() gin.HandlerFunc {
 		}
 		username, err := token.ParseRequest(c)
 		if err != nil {
-			core.WriteResponse(c, errno.ErrTokenInvalid, nil)
+			response.WriteResponse(c, errno.ErrTokenInvalid, nil)
 			c.Abort()
 			return
 		}

@@ -8,10 +8,10 @@ package miniblog
 import (
 	v1 "cn.xdmnb/study/miniblog/internal/app/miniblog/controller/v1/user"
 	"cn.xdmnb/study/miniblog/internal/app/miniblog/store"
-	"cn.xdmnb/study/miniblog/internal/pkg/core"
 	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
 	"cn.xdmnb/study/miniblog/internal/pkg/middleware"
+	"cn.xdmnb/study/miniblog/internal/pkg/response"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,14 +22,14 @@ func installRouters(g *gin.Engine) error {
 
 	// 注册 404 Handler.
 	g.NoRoute(func(c *gin.Context) {
-		core.WriteResponse(c, errno.ErrPageNotFound, nil)
+		response.WriteResponse(c, errno.ErrPageNotFound, nil)
 	})
 
 	// 注册 /healthz handler.
 	g.GET("/healthz", func(c *gin.Context) {
 		log.C(c).Infow("Healthz function called")
 
-		core.WriteResponse(c, nil, map[string]string{"status": "ok"})
+		response.WriteResponse(c, nil, map[string]string{"status": "ok"})
 	})
 
 	g.Use(middleware.Authn())
