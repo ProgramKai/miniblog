@@ -6,7 +6,9 @@
 package miniblog
 
 import (
+	"cn.xdmnb/study/miniblog/internal/app/miniblog/store"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
+	"cn.xdmnb/study/miniblog/pkg/db"
 	"os"
 	"path/filepath"
 	"strings"
@@ -70,4 +72,25 @@ func initConfig() {
 
 	log.Infow("Using config file", "file", viper.ConfigFileUsed())
 
+}
+
+func initStore() error {
+	dbOptions := &db.MySQLOptions{
+		Host:                  viper.GetString("db.host"),
+		Username:              viper.GetString("db.username"),
+		Password:              viper.GetString("db.password"),
+		Database:              viper.GetString("db.database"),
+		MaxIdleConnections:    viper.GetInt("db.max-idle-connections"),
+		MaxOpenConnections:    viper.GetInt("db.max-open-connections"),
+		MaxConnectionLifeTime: viper.GetDuration("db.max-connection-life-time"),
+		LogLevel:              viper.GetInt("db.log-level"),
+	}
+	mysqlDB, err := db.NewMySQL(dbOptions)
+	if err != nil {
+		return err
+	}
+
+	_ = store.NewStore(mysqlDB)
+
+	return nil
 }

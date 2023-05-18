@@ -6,8 +6,6 @@
 package miniblog
 
 import (
-	"cn.xdmnb/study/miniblog/internal/pkg/core"
-	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
 	"cn.xdmnb/study/miniblog/internal/pkg/middleware"
 	"cn.xdmnb/study/miniblog/pkg/version/verflag"
@@ -68,23 +66,18 @@ func NewMiniBlogCommand() *cobra.Command {
 }
 
 func run() error {
+	if err := initStore(); err != nil {
+		return err
+	}
 	gin.SetMode(viper.GetString("runmode"))
 	g := gin.New()
 
 	middlewares := []gin.HandlerFunc{gin.Recovery(), middleware.NoCache, middleware.Secure, middleware.RequestID()}
 	g.Use(middlewares...)
 
-	// 注册 404 Handler.
-	g.NoRoute(func(c *gin.Context) {
-		core.WriteResponse(c, errno.ErrPageNotFound, nil)
-	})
-
-	// 注册 /healthz handler.
-	g.GET("/healthz", func(c *gin.Context) {
-		log.C(c).Infow("Healthz function called")
-
-		core.WriteResponse(c, nil, gin.H{"status": "ok"})
-	})
+	if err := installRouters(g); err != nil {
+		return err
+	}
 
 	// 创建 HTTP Server 实例
 	httpsrv := &http.Server{Addr: viper.GetString("addr"), Handler: g}
