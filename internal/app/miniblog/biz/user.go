@@ -12,6 +12,12 @@ import (
 	v1 "cn.xdmnb/study/miniblog/internal/pkg/request_body/v1"
 	"context"
 	"regexp"
+	"sync"
+)
+
+var (
+	userBiz IUserBiz
+	once    sync.Once
 )
 
 type IUserBiz interface {
@@ -24,8 +30,11 @@ type UserBizImpl struct {
 
 var _ IUserBiz = (*UserBizImpl)(nil)
 
-func newUserBiz(ds store.IStore) *UserBizImpl {
-	return &UserBizImpl{ds: ds}
+func newUserBiz(ds store.IStore) IUserBiz {
+	once.Do(func() {
+		userBiz = &UserBizImpl{ds: ds}
+	})
+	return userBiz
 }
 
 // Create 创建用户

@@ -26,3 +26,6 @@ log:
   level: debug
   format: console
   output-paths: [./miniblog.log, stdout]
+
+ignore-authn-uri:
+  - '/api/v1/auth/*'

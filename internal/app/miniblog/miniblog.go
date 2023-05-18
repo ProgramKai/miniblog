@@ -6,8 +6,10 @@
 package miniblog
 
 import (
+	"cn.xdmnb/study/miniblog/internal/pkg/known"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
 	"cn.xdmnb/study/miniblog/internal/pkg/middleware"
+	"cn.xdmnb/study/miniblog/internal/pkg/token"
 	"cn.xdmnb/study/miniblog/pkg/version/verflag"
 	"context"
 	"errors"
@@ -69,6 +71,8 @@ func run() error {
 	if err := initStore(); err != nil {
 		return err
 	}
+	// 设置 token 包的签发密钥，用于 token 包 token 的签发和解析
+	token.Init(viper.GetString("jwt-secret"), known.XUsernameKey)
 	gin.SetMode(viper.GetString("runmode"))
 	g := gin.New()
 

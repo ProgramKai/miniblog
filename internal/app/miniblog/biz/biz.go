@@ -5,7 +5,16 @@
 
 package biz
 
-import "cn.xdmnb/study/miniblog/internal/app/miniblog/store"
+import (
+	"cn.xdmnb/study/miniblog/internal/app/miniblog/store"
+	"cn.xdmnb/study/miniblog/internal/pkg/log"
+	"sync"
+)
+
+var (
+	b            IBiz
+	iBizLoadOnce sync.Once
+)
 
 type IBiz interface {
 	UserBiz() IUserBiz
@@ -24,5 +33,9 @@ func (b biz) UserBiz() IUserBiz {
 }
 
 func NewBiz(ds store.IStore) IBiz {
-	return &biz{ds: ds}
+	iBizLoadOnce.Do(func() {
+		log.Infow("Load Biz")
+		b = &biz{ds: ds}
+	})
+	return b
 }

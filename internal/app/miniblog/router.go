@@ -27,11 +27,16 @@ func installRouters(g *gin.Engine) error {
 
 		core.WriteResponse(c, nil, map[string]string{"status": "ok"})
 	})
-	userController := v1.NewUserController(store.S)
 
-	v1 := g.Group("/v1")
+	v1Router := g.Group("/v1")
 	{
-		userRouter := v1.Group("/user")
+		userController := v1.NewUserController(store.S)
+		authRouter := v1Router.Group("/auth")
+		{
+			authRouter.POST("/register", userController.CreateUser)
+		}
+
+		userRouter := v1Router.Group("/user")
 		{
 			userRouter.POST("", userController.CreateUser)
 		}
