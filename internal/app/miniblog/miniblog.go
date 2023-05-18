@@ -8,7 +8,6 @@ package miniblog
 import (
 	"cn.xdmnb/study/miniblog/internal/pkg/known"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
-	"cn.xdmnb/study/miniblog/internal/pkg/middleware"
 	"cn.xdmnb/study/miniblog/internal/pkg/token"
 	"cn.xdmnb/study/miniblog/pkg/version/verflag"
 	"context"
@@ -75,9 +74,6 @@ func run() error {
 	token.Init(viper.GetString("jwt-secret"), known.XUsernameKey)
 	gin.SetMode(viper.GetString("runmode"))
 	g := gin.New()
-
-	middlewares := []gin.HandlerFunc{gin.Recovery(), middleware.NoCache, middleware.Secure, middleware.RequestID()}
-	g.Use(middlewares...)
 
 	if err := installRouters(g); err != nil {
 		return err

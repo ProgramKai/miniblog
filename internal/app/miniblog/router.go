@@ -6,16 +6,20 @@
 package miniblog
 
 import (
-	v1 "cn.xdmnb/study/miniblog/internal/app/miniblog/controller/v1"
+	v1 "cn.xdmnb/study/miniblog/internal/app/miniblog/controller/v1/user"
 	"cn.xdmnb/study/miniblog/internal/app/miniblog/store"
 	"cn.xdmnb/study/miniblog/internal/pkg/core"
 	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
+	"cn.xdmnb/study/miniblog/internal/pkg/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 // installRouters 注册路由.
 func installRouters(g *gin.Engine) error {
+	middlewares := []gin.HandlerFunc{middleware.RequestLog(), gin.Recovery(), middleware.NoCache, middleware.Secure, middleware.RequestID(), middleware.Authn()}
+	g.Use(middlewares...)
+
 	// 注册 404 Handler.
 	g.NoRoute(func(c *gin.Context) {
 		core.WriteResponse(c, errno.ErrPageNotFound, nil)
@@ -28,17 +32,19 @@ func installRouters(g *gin.Engine) error {
 		core.WriteResponse(c, nil, map[string]string{"status": "ok"})
 	})
 
-	v1Router := g.Group("/v1")
+	g.Use(middleware.Authn())
+	v1Router := g.Group("/api/v1")
 	{
 		userController := v1.NewUserController(store.S)
 		authRouter := v1Router.Group("/auth")
 		{
 			authRouter.POST("/register", userController.CreateUser)
+			authRouter.POST("/login", userController.Login)
 		}
 
 		userRouter := v1Router.Group("/user")
 		{
-			userRouter.POST("", userController.CreateUser)
+			userRouter.PUT(":name/change-pwd", userController.ChangePassword)
 		}
 
 	}

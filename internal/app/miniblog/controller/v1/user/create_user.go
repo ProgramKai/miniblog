@@ -3,25 +3,15 @@
 // // license that can be found in the LICENSE file. The original repo for
 // // this file is https://github.com/ProgramKai/miniblog
 
-package v1
+package user
 
 import (
-	"cn.xdmnb/study/miniblog/internal/app/miniblog/biz"
-	"cn.xdmnb/study/miniblog/internal/app/miniblog/store"
 	"cn.xdmnb/study/miniblog/internal/pkg/core"
 	"cn.xdmnb/study/miniblog/internal/pkg/errno"
 	"cn.xdmnb/study/miniblog/internal/pkg/log"
 	v1 "cn.xdmnb/study/miniblog/internal/pkg/request_body/v1"
 	"github.com/gin-gonic/gin"
 )
-
-type UserController struct {
-	b biz.IBiz
-}
-
-func NewUserController(ds store.IStore) *UserController {
-	return &UserController{b: biz.NewBiz(ds)}
-}
 
 func (ctrl *UserController) CreateUser(c *gin.Context) {
 	log.C(c).Infow("Create user function called")
