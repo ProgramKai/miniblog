@@ -33,7 +33,7 @@ func installRouters(g *gin.Engine) error {
 	{
 		userRouter := v1.Group("/user")
 		{
-			userRouter.POST("/", userController.CreateUser)
+			userRouter.POST("", userController.CreateUser)
 		}
 
 	}

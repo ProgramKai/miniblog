@@ -7,6 +7,7 @@ package model
 
 import (
 	"cn.xdmnb/study/miniblog/pkg/auth"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -25,7 +26,7 @@ func (UserM) TableName() string {
 	return "user"
 }
 
-func (u *UserM) BeforeCreate() (err error) {
+func (u *UserM) BeforeCreate(db *gorm.DB) (err error) {
 	// Encrypt the user password.
 	u.Password, err = auth.Encrypt(u.Password)
 	if err != nil {
